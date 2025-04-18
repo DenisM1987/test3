@@ -1,5 +1,5 @@
 import datetime
-from typing import Callable, Any, Optional
+from typing import Any, Callable, Optional
 
 
 def log(filename: Optional[str] = None) -> Callable:
@@ -10,7 +10,8 @@ def log(filename: Optional[str] = None) -> Callable:
             # Запись логов
             try:
                 result = func(*args, **kwargs)
-                log_message = f"{func.__name__} ok at {datetime.datetime.now()}\n"
+                log_message = (f"{func.__name__} ok at "
+                               f"{datetime.datetime.now()}\n")
                 if filename:
                     with open(filename, "a") as f:
                         f.write(log_message)
@@ -32,4 +33,3 @@ def log(filename: Optional[str] = None) -> Callable:
         return wrapper
 
     return decorator
-

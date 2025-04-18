@@ -1,4 +1,4 @@
-import os
+# import os
 from src.decorators import log
 
 
@@ -17,7 +17,8 @@ def test_log_to_file(tmp_path):
     """Тест записи логов в файл."""
     log_file = tmp_path / "test_log.txt"
     @log(filename=log_file)
-    def div(a, b):
+
+def div(a, b):
         return a / b
 
     div(4, 2)
