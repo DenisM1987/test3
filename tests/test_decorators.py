@@ -1,7 +1,5 @@
 import os
-
 import pytest
-
 from src.decorators import log
 
 
@@ -15,6 +13,7 @@ def test_log_to_console(capsys):
     add(1, 2)
     captured = capsys.readouterr()
     assert "add ok" in captured.out
+    assert "error" not in captured.out
 
 
 def test_log_to_file(tmp_path):
@@ -25,12 +24,17 @@ def test_log_to_file(tmp_path):
     def div(a: int, b: int) -> float:
         return a / b
 
+    # Проверка успешного выполнения
     div(10, 2)
     with open(log_file, "r") as f:
-        assert "div ok" in f.read()
+        content = f.read()
+        assert "div ok" in content
+        assert "error" not in content
 
     # Проверка ошибки
     with pytest.raises(ZeroDivisionError):
         div(1, 0)
     with open(log_file, "r") as f:
-        assert "ZeroDivisionError" in f.read()
+        content = f.read()
+        assert "ZeroDivisionError" in content
+        assert "Inputs: (1, 0)" in content
