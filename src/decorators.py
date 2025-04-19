@@ -1,6 +1,6 @@
 import datetime
-from typing import Callable, Any, Optional, TextIO
 import sys
+from typing import Any, Callable, Optional, TextIO
 
 
 def log(filename: Optional[str] = None) -> Callable:
@@ -22,9 +22,9 @@ def log(filename: Optional[str] = None) -> Callable:
 
             try:
                 result = func(*args, **kwargs)
-                msg = f"{func_name} ok at {timestamp}\n"
+                msg = f"{timestamp} {func_name} ok\n"
             except Exception as e:
-                msg = f"{func_name} error: {type(e).__name__}. Inputs: {args}, {kwargs}\n"
+                msg = f"{timestamp} {func_name} error: {type(e).__name__}. Inputs: {args}, {kwargs}\n"
                 if filename:
                     with open(filename, "a") as f:
                         f.write(msg)
