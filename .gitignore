@@ -176,3 +176,10 @@ https://github.com/github/gitignore/blob/main/Global/JetBrains.gitignore
 # PyPI configuration file
 .pypirc
 #/htmlcov/
+
+
+.env
+__pycache__/
+*.pyc
+.idea/
+.vscode/
