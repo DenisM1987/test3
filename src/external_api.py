@@ -9,7 +9,7 @@ API_KEY = os.getenv('EXCHANGE_RATE_API_KEY')
 BASE_URL = 'https://api.apilayer.com/exchangerates_data/latest'
 
 
-def convert_currency_to_rub(transaction: Dict[str, Any]) -> Optional[float]:
+def convert_currency_to_rub(transaction: Dict[str, any]) -> Optional[float]:
     """
     Конвертирует сумму транзакции в рубли.
 
@@ -19,7 +19,8 @@ def convert_currency_to_rub(transaction: Dict[str, Any]) -> Optional[float]:
     Returns:
         Сумма транзакции в рублях (float) или None, если конвертация невозможна
     """
-    if not transaction or 'amount' not in transaction or 'currency' not in transaction:
+    if (not transaction or 'amount' not in transaction or 'currency'
+            not in transaction):
         return None
 
     amount = transaction['amount']
