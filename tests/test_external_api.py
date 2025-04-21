@@ -28,6 +28,16 @@ def test_convert_usd(mock_get, usd_transaction):
 
 
 def test_invalid_transaction():
-    assert convert_currency_to_rub({}) is None
-    assert convert_currency_to_rub({'amount': '100'}) is None
-    assert convert_currency_to_rub({'currency': 'USD'}) is None
+    # Теперь ожидаем 0.0 вместо None
+    assert convert_currency_to_rub({}) == 0.0
+    assert convert_currency_to_rub({'amount': '100'}) == 0.0
+    assert convert_currency_to_rub({'currency': 'USD'}) == 0.0
+
+
+def test_invalid_amount():
+    assert convert_currency_to_rub({'amount':
+                                    'invalid', 'currency': 'USD'}) == 0.0
+
+
+def test_unsupported_currency():
+    assert convert_currency_to_rub({'amount': '100', 'currency': 'GBP'}) == 0.0
