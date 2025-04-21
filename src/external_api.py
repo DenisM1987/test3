@@ -1,33 +1,42 @@
 import os
 import requests
-from typing import Dict, Optional
+from typing import Dict, Optional, Any
 from dotenv import load_dotenv
+import logging
 
 load_dotenv()
+
+logging.basicConfig(level=logging.ERROR)
+logger = logging.getLogger(__name__)
 
 API_KEY = os.getenv('EXCHANGE_RATE_API_KEY')
 BASE_URL = 'https://api.apilayer.com/exchangerates_data/latest'
 
 
-def convert_currency_to_rub(transaction: Dict[str, any]) -> Optional[float]:
+def convert_currency_to_rub(transaction: Dict[str, Any]) -> Optional[float]:
     """
     Конвертирует сумму транзакции в рубли.
 
     Args:
-        transaction: Словарь с данными о транзакции
+        transaction: Словарь с данными о транзакции, включая 'amount' и 'currency'.
 
     Returns:
-        Сумма транзакции в рублях (float) или None, если конвертация невозможна
+        Сумма транзакции в рублях (float) или None, если конвертация невозможна.
     """
-    if (not transaction or 'amount' not in transaction or 'currency'
-            not in transaction):
+    if not transaction or 'amount' not in transaction or 'currency' not in transaction:
+        logger.error("Неверный формат транзакции: отсутствует 'amount' или 'currency'")
         return None
 
-    amount = transaction['amount']
-    currency = transaction['currency']
+    try:
+        amount = float(transaction['amount'])
+    except (TypeError, ValueError):
+        logger.error(f"Невозможно преобразовать amount: {transaction['amount']}")
+        return None
+
+    currency = transaction['currency'].upper()
 
     if currency == 'RUB':
-        return float(amount)
+        return amount
 
     if currency in ('USD', 'EUR'):
         try:
@@ -38,10 +47,14 @@ def convert_currency_to_rub(transaction: Dict[str, any]) -> Optional[float]:
                 timeout=10
             )
             response.raise_for_status()
+            data = response.json()
+            rate = data['rates']['RUB']
+            return amount * rate
+        except requests.RequestException as e:
+            logger.error(f"Ошибка запроса к API: {e}")
+        except (KeyError, ValueError) as e:
+            logger.error(f"Ошибка обработки ответа API: {e}")
+        return None
 
-            rate = response.json()['rates']['RUB']
-            return float(amount) * rate
-        except (requests.RequestException, KeyError, ValueError):
-            return None
-
+    logger.error(f"Неподдерживаемая валюта: {currency}")
     return None
