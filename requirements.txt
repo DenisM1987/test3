@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 requests==2.31.0
 python-dotenv==1.0.0
 pytest==7.4.0
@@ -5,3 +6,10 @@ pytest-mock==3.11.1
 flake8==6.1.0
 mypy==1.5.1
 types-requests==2.31.0.1
+=======
+pytest>=7.0
+pytest-cov>=3.0
+flake8>=5.0
+mypy>=0.900
+isort>=5.0
+>>>>>>> 71daba29495e269dd7694b7208a1daa94ebd34b4
