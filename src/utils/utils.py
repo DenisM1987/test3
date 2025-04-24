@@ -1,16 +1,45 @@
-from . import utils_logger
+import logging
+from typing import Any
+
+# Создаем логер для модуля utils
+logger = logging.getLogger('utils')
 
 
-def some_function(param: str) -> str:
+def setup_logging() -> None:
+    """Настройка логирования для модуля utils"""
+    logger.setLevel(logging.DEBUG)
+
+    # Создаем файловый обработчик
+    file_handler = logging.FileHandler('logs/utils.log', mode='w')
+    file_handler.setLevel(logging.DEBUG)
+
+    # Создаем форматтер
+    file_formatter = logging.Formatter(
+        '%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+        datefmt='%Y-%m-%d %H:%M:%S'
+    )
+
+    # Настраиваем обработчик
+    file_handler.setFormatter(file_formatter)
+
+    # Добавляем обработчик к логеру
+    logger.addHandler(file_handler)
+
+
+def example_function(value: Any) -> Any:
+    """Пример функции с логированием"""
     try:
-        (utils_logger.debug
-         (f"Вызвана функция some_function с параметром: {param}"))
-        # Логика функции
-        result = f"Processed {param}"
-        (utils_logger.info
-         (f"Функция some_function успешно выполнена. Результат: {result}"))
+        (logger.debug
+         (f"Вызов example_function с аргументом: {value}"))
+        result = value * 2
+        (logger.info
+         (f"Функция example_function успешно выполнена. Результат: {result}"))
         return result
     except Exception as e:
-        (utils_logger.error
-         (f"Ошибка в функции some_function: {str(e)}", exc_info=True))
+        (logger.error
+         (f"Ошибка в example_function: {str(e)}", exc_info=True))
         raise
+
+
+# Инициализация логирования при импорте модуля
+setup_logging()
