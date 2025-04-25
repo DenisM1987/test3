@@ -183,3 +183,7 @@ __pycache__/
 *.pyc
 .idea/
 .vscode/
+logs/
+__pycache__/
+*.py[cod]
+*.log
