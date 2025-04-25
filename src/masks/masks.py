@@ -26,12 +26,10 @@ def setup_logging() -> None:
     logger.addHandler(file_handler)
 
 
-def mask_card_number\
-                (card_number: Union[str, int]) -> Optional[str]:
+def mask_card_number(card_number: Union[str, int]) -> Optional[str]:
     """Маскирует номер карты"""
     try:
-        (logger.debug
-         (f"Вызов mask_card_number с аргументом: {card_number}"))
+        (logger.debug(f"Вызов mask_card_number: {card_number}"))
         str_number = str(card_number)
         if len(str_number) != 16:
             raise ValueError("Номер карты должен содержать 16 цифр")
