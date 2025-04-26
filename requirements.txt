@@ -13,3 +13,5 @@ flake8>=5.0
 mypy>=0.900
 isort>=5.0
 >>>>>>> 71daba29495e269dd7694b7208a1daa94ebd34b4
+pandas
+openpyxl  # для работы с Excel
