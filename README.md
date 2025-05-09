@@ -1,33 +1,31 @@
-## Декоратор `log`
+# Transaction Analytics Application
 
-### Функционал
-- Логирует вызовы функций.
-- Поддерживает вывод в файл или консоль.
-- Фиксирует ошибки с аргументами.
+Приложение для анализа банковских транзакций из Excel-файла.
 
-### Использование
+## Функциональность
 
-from src.decorators import log
+- Генерация JSON-данных для веб-страниц:
+  - Главная страница с общей статистикой
+  - Страница событий с детализацией по периодам
+- Сервисы анализа:
+  - Инвесткопилка (расчет округлений)
+  - Поиск транзакций
+- Отчеты:
+  - Траты по категориям
+  - Траты по дням недели
 
-@log(filename="app.log")
-def multiply(a: int, b: int) -> int:
-    return a * b
+## Установка
 
+1. Установите Poetry: `pip install poetry`
+2. Клонируйте репозиторий
+3. Установите зависимости: `poetry install`
+4. Создайте файл `.env` на основе `.env_template`
+5. Поместите файл с транзакциями в `data/operations.xls`
 
-### Пример логов
+## Запуск
 
-multiply ok at 2024-05-20 14:30:00
-multiply error: ValueError. Inputs: (1, "a"), {}
+`poetry run python src/main.py`
 
-## Новая функциональность
+## Тестирование
 
-Добавлена поддержка чтения финансовых операций из:
-- CSV файлов (функция `read_csv_file()`)
-- Excel файлов (функция `read_excel_file()`)
-
-Пример использования:
-```python
-from src.file_operations import read_csv_file, read_excel_file
-
-csv_transactions = read_csv_file('data/transactions.csv')
-excel_transactions = read_excel_file('data/transactions_excel.xlsx')
+`poetry run pytest`

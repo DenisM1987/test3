@@ -1,17 +1,15 @@
-from typing import Dict, List
+"""
+Основной модуль для запуска приложения
+"""
+from .views import home_page, events_page
+from .services import profitable_cashback_categories
+from .reports import spending_by_category
 
-from transaction import (count_transactions_by_category,
-                         filter_transactions_by_description)
+def main():
+    """Пример использования функций"""
+    # Пример вызова функции главной страницы
+    home_data = home_page("2023-05-15 14:30:00")
+    print(home_data)
 
-
-def main() -> None:
-    """Главная функция, взаимодействующая с пользователем."""
-    print("Привет! "
-          "Добро пожаловать в программу работы с банковскими транзакциями.")
-    print("Выберите необходимый пункт меню:")
-    print("1. Получить информацию о транзакциях из JSON-файла")
-    print("2. Получить информацию о транзакциях из CSV-файла")
-    print("3. Получить информацию о транзакциях из XLSX-файла")
-
-    print(input("Ваш выбор: "))
-    # Дальнейшая логика (загрузка файла, фильтрация, вывод)
+if __name__ == "__main__":
+    main()

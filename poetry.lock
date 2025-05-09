@@ -5,3 +5,25 @@ package = []
 lock-version = "2.1"
 python-versions = ">=3.13"
 content-hash = "43c15d4b40e26b9dc4090308565270876da3b72ef2b9fa0bddbe4b344cfe177c"
+
+[tool.poetry]
+name = "transaction-analytics"
+version = "0.1.0"
+description = "Application for transaction analysis"
+authors = ["Your Name <your.email@example.com>"]
+
+[tool.black]
+line-length = 119
+exclude = '''
+/(
+    \.git
+)/
+'''
+
+[tool.isort]
+line_length = 119
+
+[tool.mypy]
+disallow_untyped_defs = true
+warn_return_any = true
+exclude = "venv"

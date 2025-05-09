@@ -1,34 +1,37 @@
-from unittest.mock import mock_open, patch
-
 import pytest
-
-from src.utils import read_json_file
-
-
-@pytest.fixture
-def valid_json_data():
-    return '[{"id": 1, "amount": 100}, {"id": 2, "amount": 200}]'
-
-
-def test_read_valid_json_file(valid_json_data):
-    with patch('builtins.open', mock_open(read_data=valid_json_data)):
-        result = read_json_file('dummy_path.json')
-        assert len(result) == 2
-        assert result[0]['id'] == 1
+from src.utils import (
+    get_greeting,
+    calculate_cashback,
+    filter_transactions_by_date,
+    group_transactions_by_category
+)
 
 
-def test_read_empty_file():
-    with patch('builtins.open', mock_open(read_data='')):
-        result = read_json_file('empty.json')
-        assert result == []
+@pytest.mark.parametrize("time,expected", [
+    ('06:00:00', 'Доброе утро'),
+    ('12:00:00', 'Добрый день'),
+    ('18:00:00', 'Добрый вечер'),
+    ('23:00:00', 'Доброй ночи'),
+])
+def test_get_greeting(time, expected):
+    assert get_greeting(f'2023-01-01 {time}') == expected
 
 
-def test_read_non_list_json():
-    with patch('builtins.open', mock_open(read_data='{"id": 1}')):
-        result = read_json_file('not_a_list.json')
-        assert result == []
+def test_calculate_cashback():
+    assert calculate_cashback(1000) == 10
+    assert calculate_cashback(150) == 1.5
 
 
-def test_file_not_found():
-    result = read_json_file('nonexistent.json')
-    assert result == []
+def test_filter_transactions_by_date(sample_transactions):
+    filtered = filter_transactions_by_date(
+        sample_transactions,
+        '2023-01-01',
+        '2023-01-31'
+    )
+    assert len(filtered) == 2
+
+
+def test_group_transactions_by_category(sample_transactions):
+    grouped = group_transactions_by_category(sample_transactions)
+    assert 'Супермаркеты' in grouped
+    assert grouped['Супермаркеты'] == 100
