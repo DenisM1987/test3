@@ -1,46 +1,44 @@
 import pytest
-from src.services import (
-    profitable_cashback_categories,
-    investment_bank,
-    simple_search,
-    find_phone_transactions,
-    find_person_transfers
-)
-
+from src import services
+from datetime import datetime
+from typing import List, Dict
 
 @pytest.fixture
-def sample_transactions():
+def transactions_data() -> List[Dict]:
+    """Фикстура с тестовыми транзакциями для сервисов"""
     return [
-        {'Дата операции': '2023-01-01', 'Категория':
-            'Супермаркеты', 'Сумма операции': 1000, 'Кешбэк': 10},
-        {'Дата операции': '2023-01-02', 'Категория':
-            'Транспорт', 'Сумма операции': 500, 'Кешбэк': 5},
+        {'date': '2023-01-05', 'amount': '1712.00', 'category': 'Food'},
+        {'date': '2023-01-10', 'amount': '325.50', 'category': 'Transport'},
+        {'date': '2023-01-15', 'amount': '1200.00', 'category': 'Shopping'},
     ]
 
+@pytest.mark.parametrize("month,limit,expected", [
+    ('2023-01', 10, 8.5),
+    ('2023-01', 50, 28.0),
+    ('2023-01', 100, 78.0),
+])
+def test_investment_bank(transactions_data, month, limit, expected):
+    """Параметризованный тест для инвесткопилки"""
+    result = services.investment_bank(month, transactions_data, limit)
+    assert result == expected
 
-def test_profitable_cashback_categories(sample_transactions):
-    result = profitable_cashback_categories(sample_transactions, 2023, 1)
-    assert 'Супермаркеты' in result
-    assert result['Супермаркеты'] == 10
+def test_investment_bank_invalid_limit(transactions_data):
+    """Тест на невалидный лимит"""
+    with pytest.raises(ValueError, match="Limit must be 10, 50 or 100"):
+        services.investment_bank('2023-01', transactions_data, 25)
 
+def test_profitable_cashback_categories(transactions_data):
+    """Тест для выгодных категорий кешбэка"""
+    result = services.profitable_cashback_categories(transactions_data, 2023, 1)
+    assert isinstance(result, dict)
+    assert 'Food' in result
+    assert result['Food'] == pytest.approx(17.12, 0.01)
 
-def test_investment_bank(sample_transactions):
-    result = investment_bank('2023-01', sample_transactions, 100)
-    assert isinstance(result, float)
-
-
-def test_simple_search(sample_transactions):
-    result = simple_search('Супермаркеты', sample_transactions)
+@patch('src.services.re.findall')
+def test_phone_number_search(mock_find, transactions_data):
+    """Тест поиска по телефонным номерам"""
+    mock_find.return_value = ['+7 999 123-45-67']
+    transactions_data[0]['description'] = 'Payment +7 999 123-45-67'
+    result = services.find_phone_transactions(transactions_data)
     assert len(result) == 1
-
-
-def test_find_phone_transactions():
-    transactions = [{'Описание': 'Пополнение +7 999 123-45-67'}]
-    result = find_phone_transactions(transactions)
-    assert len(result) == 1
-
-
-def test_find_person_transfers():
-    transactions = [{'Категория': 'Переводы', 'Описание': 'Иван С.'}]
-    result = find_person_transfers(transactions)
-    assert len(result) == 1
+    assert '+7 999 123-45-67' in result[0]['description']

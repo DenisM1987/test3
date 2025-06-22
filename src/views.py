@@ -1,33 +1,28 @@
-"""
-Функции для генерации JSON ответов для веб-страниц:
-- Главная страница
-- Страница событий
-"""
-from .utils import load_transactions, filter_transactions_by_date
-
-
 def home_page(date_time: str) -> dict:
     """
-    Генерация данных для главной страницы
+    Генерирует JSON-данные для главной страницы.
+    
     Args:
         date_time: Дата и время в формате 'YYYY-MM-DD HH:MM:SS'
+    
     Returns:
-        dict: JSON-ответ для главной страницы
+        Словарь с данными для главной страницы
     """
-    transactions = load_transactions()  # Пример использования импортированной функции
-    filtered_transactions = filter_transactions_by_date(transactions, date_time)
-    return {"data": filtered_transactions}
+    # Получение данных из Excel
+    transactions = utils.get_transactions_from_excel()
+    
+    # Фильтрация данных по дате
+    filtered_data = utils.filter_transactions_by_date(transactions, date_time)
+    
+    # Формирование ответа
+    response = {
+        "greeting": utils.get_greeting(date_time),
+        "cards": utils.get_cards_info(filtered_data),
+        "top_transactions": utils.get_top_transactions(filtered_data, 5),
+        "currency_rates": utils.get_currency_rates(),
+        "stock_prices": utils.get_stock_prices()
+    }
 
-
-def events_page(date_time: str, period: str = 'M') -> dict:
-    """
-    Генерация данных для страницы событий
-    Args:
-        date_time: Дата и время в формате 'YYYY-MM-DD HH:MM:SS'
-        period: Период ('W', 'M', 'Y', 'ALL')
-    Returns:
-        dict: JSON-ответ для страницы событий
-    """
-    transactions = load_transactions()
-    filtered_transactions = filter_transactions_by_date(transactions, date_time)
-    return {"events": filtered_transactions, "period": period}
+    except Exception as e:
+    logging.error(f"Error in home_page: {str(e)}")
+    raise
