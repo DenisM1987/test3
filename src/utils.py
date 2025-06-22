@@ -1,24 +1,27 @@
-import json
-from typing import Any, Dict, List
+def get_greeting(date_time: str) -> str:
+    """Возвращает приветствие в зависимости от времени суток"""
+    pass
 
+def get_transactions_from_excel() -> pd.DataFrame:
+    """Загружает транзакции из Excel-файла"""
+    pass
 
-def read_json_file(file_path: str) -> List[Dict[str, Any]]:
-    """
-    Читает JSON-файл и возвращает список словарей с данными о транзакциях.
+def filter_transactions_by_date(transactions: pd.DataFrame, date_time: str) -> pd.DataFrame:
+    """Фильтрует транзакции по дате"""
+    pass
 
-    Args:
-        file_path: Путь к JSON-файлу
+def get_cards_info(transactions: pd.DataFrame) -> list:
+    """Возвращает информацию по картам"""
+    pass
 
-    Returns:
-        Список словарей с данными о транзакциях. Если файл пустой,
-        содержит не список или не найден, возвращается пустой список.
-    """
-    try:
-        with open(file_path, 'r', encoding='utf-8') as file:
-            data = json.load(file)
+def get_top_transactions(transactions: pd.DataFrame, limit: int) -> list:
+    """Возвращает топ транзакций по сумме"""
+    pass
 
-            if isinstance(data, list):
-                return data
-            return []
-    except (FileNotFoundError, json.JSONDecodeError):
-        return []
+def get_currency_rates() -> list:
+    """Получает курсы валют из API"""
+    pass
+
+def get_stock_prices() -> list:
+    """Получает цены акций из API"""
+    pass
